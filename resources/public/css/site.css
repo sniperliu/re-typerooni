@@ -32,3 +32,79 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+.target-word {
+  padding-right: 0.3em;
+  padding-left: 0.3em;
+  display: inline-block;
+  line-height: 1.45em;
+  font-size: 2em;
+}
+
+span.current {
+  background-color: #246781;
+  color: white;
+  border-radius: 6px;
+}
+
+span.correct {
+  color: green;
+}
+
+span.incorrect {
+  color: #C52;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+#games-analysis, #games-analysis-wordlets {
+  clear: both;
+}
+
+#games-analysis-total-words {
+  padding-right: 10px;
+}
+
+#games-analysis-correct-words {
+  color: green;
+  padding-right: 10px;
+}
+
+#games-analysis-incorrect-words {
+  color: red;
+  padding-right: 10px;
+}
+
+#games-analysis-wpm {
+  color: blue;
+}
+
+#game-timer {
+  margin-left: 20px;
+  border: 1px solid black;
+  padding: 4px;
+  border-radius: 3px;
+}
+
+.game-over {
+  background-color: lightgrey;
+}
+
+#target-word-view {
+  width: 800px;
+  height: 8.66em;
+  overflow: hidden;
+  border: 1px solid grey;
+  padding: 8px;
+  border-radius: 6px;
+  box-shadow: 2px 2px 2px grey;
+  margin-bottom: 20px;
+}
+
+#target-words {
+  position: relative;
+  transition: top 0.3s;
+  transition-timing-function: ease-in-out;
+}

@@ -1,8 +1,12 @@
 (ns re-typerooni.core
-    (:require [reagent.core :as reagent :refer [atom]]
-              [reagent.session :as session]
-              [secretary.core :as secretary :include-macros true]
-              [accountant.core :as accountant]))
+  (:require [reagent.core :as reagent :refer [atom]]
+            [reagent.session :as session]
+            [secretary.core :as secretary :include-macros true]
+            [accountant.core :as accountant]
+            [re-frame.core :refer [dispatch-sync]]
+            [re-typerooni.views :refer [re-typerooni-app]]
+            [re-typerooni.handlers]
+            [re-typerooni.subs]))
 
 ;; -------------------------
 ;; Views
@@ -22,7 +26,7 @@
 ;; Routes
 
 (secretary/defroute "/" []
-  (session/put! :current-page #'home-page))
+  (session/put! :current-page #'re-typerooni-app))
 
 (secretary/defroute "/about" []
   (session/put! :current-page #'about-page))
@@ -31,6 +35,7 @@
 ;; Initialize app
 
 (defn mount-root []
+  (dispatch-sync [:initialise-wpm])
   (reagent/render [current-page] (.getElementById js/document "app")))
 
 (defn init! []
