@@ -8,10 +8,17 @@ Emacs and Cider installed
 
 ## Usage
 
+Leinigen
+
 ```bash
 $ lein figwheel
 
 $ open http://localhost:3449
+```
+
+Boot
+```bash
+$ boot serve -d target watch reload cljs-repl cljs target -d target
 ```
 
 Emacs
