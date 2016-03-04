@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>re-typerooni with ClojureScript</title>
+<meta name="author" content="(Hao Liu)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="file:///Users/haoliu/Developer/js/reveal.js/css/reveal.css"/>
+<link rel="stylesheet" href="file:///Users/haoliu/Developer/js/reveal.js/css/theme/black.css" id="theme"/>
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'file:///Users/haoliu/Developer/js/reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<meta name="description" content="ClojureScript Reagent/re-frame Introduction">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide">
+<h1>re-typerooni with ClojureScript</h1>
+<h2>Hao Liu</h2>
+<h2><a href="mailto:sniperliuhao@gmail.com">sniperliuhao@gmail.com</a></h2>
+<h2></h2>
+</section>
+<section id="table-of-contents">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#/slide-orgheadline2">Clojurescript</a></li>
+<li><a href="#/slide-orgheadline9">Implement re-typerooni with Reagent/re-frame</a></li>
+<li><a href="#/slide-orgheadline10">What&rsquo;s Next</a></li>
+<li><a href="#/slide-orgheadline11">Questions</a></li>
+</ul>
+</div>
+</div>
+</section>
+
+<section>
+<section id="slide-orgheadline2" data-background="./cljs_logo.png" data-background-size="500px" data-background-repeat="none">
+<h2 id="orgheadline2">Clojurescript</h2>
+</section>
+</section>
+<section>
+<section id="slide-orgheadline1">
+<h3 id="orgheadline1">Why ClojureScript?</h3>
+<p>
+It&rsquo;s Clojure!!!!!
+</p>
+
+
+<div class="figure">
+<p><img src="./trump.jpg" alt="trump.jpg" />
+</p>
+</div>
+
+</section>
+<section>
+<ul>
+<li>It&rsquo;s Clojure run in JSVM
+<ul>
+<li>Share the same syntax</li>
+<li>Could be cross complied and run in both client/server side</li>
+<li>REPL</li>
+<li>Share many excellent tools, libs &amp; ecosystem with clojure, like lein, boot, core.async, schema etc.</li>
+
+</ul></li>
+
+</ul>
+</section>
+<section>
+<ul>
+<li>It&rsquo;s also ClojureScript itself
+<ul>
+<li>Strong ecosystem</li>
+<li>Tools, like figwheel &#x2026;</li>
+<li>Libraries, like Reagent, Om, re-frame &#x2026;</li>
+<li>Interop with Javascript</li>
+<li>Run in different platform browser, node.js, java script engine, even mobile (iOS/Replete) &#x2026;</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline9">
+<h2 id="orgheadline9">Implement re-typerooni with Reagent/re-frame</h2>
+<div class="outline-text-2" id="text-orgheadline9">
+</div></section>
+</section>
+<section>
+<section id="slide-orgheadline3">
+<h3 id="orgheadline3">Demo</h3>
+<p>
+<a href="https://github.com/sniperliu/re-typerooni">re-typerooni</a>
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-shell">$ lein do clean, figwheel
+</pre>
+</div>
+
+<p>
+or
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-shell">$ boot serve -d target watch reload cljs-repl cljs target -d target
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline5">
+<h3 id="orgheadline5">Reagent</h3>
+<p>
+Reagent is a simple ClojureScript interface to React.
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-clojure">(defn wpm-app []
+   (let [test-words (subscribe [:test-words])
+	 status (subscribe [:status])]
+     [:div
+      [:section#wpm-app
+       [:header
+	[:h1 "Words Per Minute"]]
+       [:section#main
+	[:div
+	 [display-panel @test-words]
+	 [control-panel @status]]
+	(when (= @status :finished)
+	  [stats-panel])]
+       [:footer]]]))
+
+;; render the page
+(reagent/render [wpm-app] (.getElementById js/document "app"))
+</pre>
+</div>
+
+</section>
+<section id="slide-orgheadline4">
+<h4 id="orgheadline4">Reagent</h4>
+<ul>
+<li data-fragment-index="1" class="fragment roll-in">Create/combine components with render function
+<ol>
+<li>simple render function</li>
+<li>function which return the render function</li>
+<li>a map of function, one of which is the renderer</li>
+
+</ol></li>
+<li data-fragment-index="2" class="fragment roll-in">Manage state with reagent atom</li>
+<li data-fragment-index="3" class="fragment roll-in">Describe UI using Hiccup-like syntax</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline7">
+<h3 id="orgheadline7">re-frame</h3>
+<p>
+re-frame is a pattern for writing SPAs in ClojureScript, using Reagent.
+</p>
+</section>
+<section>
+<p>
+app-db  &#x2013;&gt;  components  &#x2013;&gt;  Hiccup  &#x2013;&gt;  Reagent  &#x2013;&gt;  VDOM  &#x2013;&gt;  React  &#x2013;&gt;  DOM
+ ^                                                                              |
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">v</td>
+</tr>
+</tbody>
+</table>
+<p>
+handlers &lt;&#x2013;&#x2014;  router  &lt;&#x2013;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;  (dispatch [event-id  event params])
+</p>
+
+</section>
+<section id="slide-orgheadline6">
+<h4 id="orgheadline6">re-frame</h4>
+<ul>
+<li>db.cljs (data layer)</li>
+<li>subs.cljs (query layer)</li>
+<li>handler.cljs (control layer and/or state transition layer)</li>
+<li>view.cljs (view layer)</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline8">
+<h3 id="orgheadline8">re-typerooni</h3>
+
+<div class="figure">
+<p><img src="./typerooni.png" alt="typerooni.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline10">
+<h2 id="orgheadline10">What&rsquo;s Next</h2>
+<ul>
+<li><a href="https://reagent-project.github.io/">Reagent Tutorial</a></li>
+
+<li><a href="https://github.com/reagent-project/reagent">Reagent Project</a></li>
+
+<li><a href="https://github.com/Day8/re-frame">re-frame</a></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline11">
+<h2 id="orgheadline11">Questions</h2>
+</section>
+</section>
+</div>
+</div>
+<p> Created by sniperliu. </p>
+<script src="file:///Users/haoliu/Developer/js/reveal.js/lib/js/head.min.js"></script>
+<script src="file:///Users/haoliu/Developer/js/reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: true,
+keyboard: true,
+overview: true,
+width: 1200,
+height: 800,
+margin: 0.10,
+minScale: 0.50,
+maxScale: 2.50,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'cube', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: 'file:///Users/haoliu/Developer/js/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'file:///Users/haoliu/Developer/js/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'file:///Users/haoliu/Developer/js/reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>

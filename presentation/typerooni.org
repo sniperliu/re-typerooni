@@ -1,0 +1,124 @@
+#+Title: re-typerooni with ClojureScript
+#+Author: Hao Liu
+#+Email: sniperliuhao@gmail.com
+
+#+OPTIONS: reveal_center:t reveal_progress:t reveal_history:nil reveal_control:t
+#+OPTIONS: reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil
+#+OPTIONS: reveal_width:1200 reveal_height:800
+#+OPTIONS: toc:1
+#+REVEAL_ROOT: file:///Users/haoliu/Developer/js/reveal.js
+#+REVEAL_MARGIN: 0.1
+#+REVEAL_MIN_SCALE: 0.5
+#+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_TRANS: cube
+#+REVEAL_THEME: black
+#+REVEAL_HLEVEL: 2
+#+REVEAL_HEAD_PREAMBLE: <meta name="description" content="ClojureScript Reagent/re-frame Introduction">
+#+REVEAL_POSTAMBLE: <p> Created by sniperliu. </p>
+#+REVEAL_PLUGINS: (markdown notes)
+# #+REVEAL_TITLE_SLIDE_BACKGROUND: ./cljs_logo.png
+# #+REVEAL_TITLE_SLIDE_BACKGROUND_SIZE: 500px
+# #+REVEAL_TITLE_SLIDE_BACKGROUND_REPEAT: none
+
+
+* Clojurescript
+    :PROPERTIES:
+    :reveal_background: ./cljs_logo.png
+    :reveal_background_size: 500px
+    :reveal_background_repeat: none
+    :END:
+
+** Why ClojureScript?
+   It's Clojure!!!!!
+
+   [[./trump.jpg]]
+
+#+REVEAL: split
+   - It's Clojure run in JSVM
+     - Share the same syntax
+     - Could be cross complied and run in both client/server side
+     - REPL
+     - Share many excellent tools, libs & ecosystem with clojure, like lein, boot, core.async, schema etc.
+#+REVEAL: split
+   - It's also ClojureScript itself
+     - Strong ecosystem
+     - Tools, like figwheel ...
+     - Libraries, like Reagent, Om, re-frame ...
+     - Interop with Javascript
+     - Run in different platform browser, node.js, java script engine, even mobile (iOS/Replete) ...
+
+* Implement re-typerooni with Reagent/re-frame
+
+** Demo
+
+   [[https://github.com/sniperliu/re-typerooni][re-typerooni]]
+
+     #+BEGIN_SRC shell
+     $ lein do clean, figwheel
+     #+END_SRC
+
+or
+
+     #+BEGIN_SRC shell
+     $ boot serve -d target watch reload cljs-repl cljs target -d target
+     #+END_SRC
+
+** Reagent
+   Reagent is a simple ClojureScript interface to React.
+
+   #+BEGIN_SRC clojure
+   (defn wpm-app []
+      (let [test-words (subscribe [:test-words])
+            status (subscribe [:status])]
+        [:div
+         [:section#wpm-app
+          [:header
+           [:h1 "Words Per Minute"]]
+          [:section#main
+           [:div
+            [display-panel @test-words]
+            [control-panel @status]]
+           (when (= @status :finished)
+             [stats-panel])]
+          [:footer]]]))
+
+   ;; render the page
+   (reagent/render [wpm-app] (.getElementById js/document "app"))
+   #+END_SRC
+
+*** Reagent
+   #+ATTR_REVEAL: :frag (roll-in roll-in roll-in) :frag_idx (1 2 3)
+   * Create/combine components with render function
+     1. simple render function
+     2. function which return the render function
+     3. a map of function, one of which is the renderer
+   * Manage state with reagent atom
+   * Describe UI using Hiccup-like syntax
+
+** re-frame
+   re-frame is a pattern for writing SPAs in ClojureScript, using Reagent.
+#+REVEAL: split
+app-db  -->  components  -->  Hiccup  -->  Reagent  -->  VDOM  -->  React  -->  DOM
+ ^                                                                              |
+ |                                                                              v
+ handlers <-----  router  <-----------------------  (dispatch [event-id  event params])
+
+*** re-frame
+
+   * db.cljs (data layer)
+   * subs.cljs (query layer)
+   * handler.cljs (control layer and/or state transition layer)
+   * view.cljs (view layer)
+
+** re-typerooni
+   [[./typerooni.png]]
+
+* What's Next
+
+ * [[https://reagent-project.github.io/][Reagent Tutorial]]
+
+ * [[https://github.com/reagent-project/reagent][Reagent Project]]
+
+ * [[https://github.com/Day8/re-frame][re-frame]]
+
+* Questions
